@@ -14,37 +14,29 @@ import TaskEditor from "./components/TaskEditor";
 export default function App() {
   // ---------------- AUTH STATES ----------------
   const [page, setPage] = useState("login"); // login | signup | tasks
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // Stores the logged-in user object {name, email, password}
 
-  // Auto-login
-  useEffect(() => {
-    const saved = localStorage.getItem("user");
-    if (saved) {
-      setUser(JSON.parse(saved));
-      setPage("tasks");
+  // --- LOCAL STORAGE HELPERS ---
+
+  // Function to get the tasks key based on the current user's email
+  const getTasksKey = (email) => `tasks_${email}`;
+
+  // Function to save tasks for the current user
+  const saveTasksToLocalStorage = (currentTasks, email) => {
+    if (email) {
+      localStorage.setItem(getTasksKey(email), JSON.stringify(currentTasks));
     }
-  }, []);
-
-  // Signup
-  const handleSignup = (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    alert("Signup successful!");
-    setPage("login");
   };
 
-  // Login
-  const handleLogin = () => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(savedUser);
-    setPage("tasks");
+  // Function to load tasks for a specific user email
+  const loadTasksFromLocalStorage = (email) => {
+    if (email) {
+      const savedTasks = localStorage.getItem(getTasksKey(email));
+      return savedTasks ? JSON.parse(savedTasks) : [];
+    }
+    return [];
   };
-
-  // Logout
-  const handleLogout = () => {
-    setUser(null);
-    setPage("login");
-  };
-
+  
   // ---------------- TASK STATES ----------------
   const [tasks, setTasks] = useState([]);
   const [search, setSearch] = useState("");
@@ -52,16 +44,51 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
 
-  // Load tasks
-  useEffect(() => {
-    const saved = localStorage.getItem("tasks");
-    if (saved) setTasks(JSON.parse(saved));
-  }, []);
+  // --- EFFECTS & HANDLERS ---
 
-  // Save tasks
+  // Auto-login & Load user on app start
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      const userData = JSON.parse(savedUser);
+      setUser(userData);
+      setPage("tasks");
+      // Load tasks for this specific user immediately after setting the user
+      setTasks(loadTasksFromLocalStorage(userData.email)); 
+    }
+  }, []); // Run only once on mount
+
+  // Sync tasks to localStorage whenever the 'tasks' state changes (and a user is logged in)
+  useEffect(() => {
+    if (user) {
+      saveTasksToLocalStorage(tasks, user.email);
+    }
+  }, [tasks, user]); // Depend on tasks and user state
+
+  // Signup (Saves user credentials to generic 'user' key)
+  const handleSignup = (userData) => {
+    // Note: This approach only supports one registered user at a time as it overwrites the 'user' key
+    localStorage.setItem("user", JSON.stringify(userData));
+    alert("Signup successful! You can now log in.");
+    setPage("login");
+  };
+
+  // Login (Sets user state and loads user-specific tasks)
+  const handleLogin = () => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    setUser(savedUser);
+    setPage("tasks");
+    // Load the correct tasks for the newly logged-in user
+    setTasks(loadTasksFromLocalStorage(savedUser.email));
+  };
+
+  // Logout (Clears user state and tasks from UI)
+  const handleLogout = () => {
+    setUser(null);
+    setTasks([]); // Clear tasks when logging out
+    // We don't delete the tasks from localStorage here, just clear UI state
+    setPage("login");
+  };
 
   // Add / Update Task
   const addOrUpdateTask = (task) => {

@@ -5,6 +5,12 @@ export default function Login({ onLogin, setPage }) {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
+    // Basic Validation
+    if (!email || !password) {
+      alert("Please enter both email and password.");
+      return;
+    }
+
     const savedUser = JSON.parse(localStorage.getItem("user"));
 
     if (!savedUser) {
@@ -13,6 +19,9 @@ export default function Login({ onLogin, setPage }) {
     }
 
     if (email === savedUser.email && password === savedUser.password) {
+      // Store the logged-in user's email (or other identifier) in session/local storage
+      // so you know who the current user is to manage their tasks.
+      localStorage.setItem("currentUserEmail", email);
       onLogin();
     } else {
       alert("Incorrect email or password");
