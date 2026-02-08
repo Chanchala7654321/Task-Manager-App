@@ -6,8 +6,7 @@ export default function TaskEditor({ task, onSave, onClose }) {
   const [tag, setTag] = useState(task?.tag || "work");
 
   const save = () => {
-    // Optional: You could force the tag to lowercase here before saving
-    // const lowercasedTag = tag.toLowerCase(); 
+    
 
     onSave({
       id: task?.id,
@@ -49,11 +48,11 @@ export default function TaskEditor({ task, onSave, onClose }) {
             onChange={(e) => setTag(e.target.value)}
           >
             <option value="work">Work</option>
-            {/* Standardized to lowercase 'personal-work' */}
+
             <option value="personal-work">Personal-Work</option>
-            {/* Standardized to lowercase 'goal' */}
+
             <option value="goal">Goal</option>
-            {/* Standardized to lowercase 'completed' */}
+            
             <option value="completed">Completed</option>
           </select>
         </div>

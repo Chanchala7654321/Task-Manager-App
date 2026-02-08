@@ -6,19 +6,19 @@ export default function Signup({ onSignup, setPage }) {
   const [password, setPassword] = useState("");
 
   const handleSignup = () => {
-    // Basic Validation
+
     if (!name || !email || !password) {
       alert("Please fill all fields");
       return;
     }
-    // Simple email format check using a regular expression
+  
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
       alert("Please enter a valid email address.");
       return;
     }
 
-    // Check if user already exists in local storage (optional)
+
     const existingUser = localStorage.getItem("user");
     if (existingUser && JSON.parse(existingUser).email === email) {
       alert("An account with this email already exists. Please log in.");

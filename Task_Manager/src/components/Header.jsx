@@ -2,7 +2,7 @@ const Header = ({ search, setSearch, user, setPage, handleLogout }) => {
   return (
     <header className="flex justify-between items-center mb-10 px-4 py-3 bg-white shadow-md rounded-lg">
 
-      {/* Logo + Subtitle */}
+      
       <div>
         <h1 className="text-3xl font-bold text-indigo-700">
           Task<span className="text-indigo-500">App</span>
@@ -10,7 +10,7 @@ const Header = ({ search, setSearch, user, setPage, handleLogout }) => {
         <p className="text-gray-500 text-sm">Your thoughts, goals, organized</p>
       </div>
 
-      {/* Search */}
+      
       <input
         type="text"
         value={search}
@@ -20,9 +20,9 @@ const Header = ({ search, setSearch, user, setPage, handleLogout }) => {
         focus:ring-2 focus:ring-indigo-300 w-60"
       />
 
-      {/* Buttons */}
+      
       <div className="flex gap-3">
-        {/* If user is NOT logged in → show Login + Signup */}
+        
         {!user ? (
           <>
             <button
@@ -40,7 +40,7 @@ const Header = ({ search, setSearch, user, setPage, handleLogout }) => {
             </button>
           </>
         ) : (
-          /* If user IS logged in → show Logout */
+         
           <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600"

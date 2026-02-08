@@ -4,7 +4,7 @@ export default function TaskCard({ task, onEdit, onDelete }) {
   return (
     <div className="bg-white p-5 rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition-all w-full">
 
-      {/* Title + Tag */}
+      
       <div className="flex justify-between items-start mb-3">
         <h3 className="text-xl font-semibold text-gray-900">{task.title}</h3>
 
@@ -25,10 +25,10 @@ export default function TaskCard({ task, onEdit, onDelete }) {
         </span>
       </div>
 
-      {/* Content */}
+      
       <p className="text-gray-600 mb-4">{task.content}</p>
 
-      {/* Footer */}
+      
       <div className="flex justify-between items-center text-gray-500 text-sm">
         <span>{new Date(task.createdAt).toLocaleDateString()}</span>
 
